@@ -57,6 +57,10 @@ files are provided under `services/ai/califusion-cnn/results/` for verification.
 
 ## Run the research console
 
+> **Full step-by-step install / deploy / run guide: [`DEPLOY.md`](DEPLOY.md)** — covers the
+> synthetic-demo, local-with-real-models, and Docker + Postgres paths, plus configuration,
+> security hardening, and troubleshooting.
+
 ```bash
 # Local (SQLite, no Docker) — reuses the pipeline environment above
 cd services/api && ./run_local.sh 8080             # http://127.0.0.1:8080  (admin / changeme by default)
