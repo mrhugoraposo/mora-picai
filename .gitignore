@@ -65,3 +65,8 @@ services/api/*.db
 *.nii.gz
 *.zip
 marksheet.csv
+
+# Synthetic demo: models + manifest are built locally by services/api/build_demo.py
+# (the synthetic example inputs, services/api/demo_assets/picai_replay.csv, ARE committed)
+services/api/demo_assets/manifest.json
+services/api/demo_assets/*.joblib

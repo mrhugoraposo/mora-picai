@@ -66,6 +66,20 @@ cd infrastructure/docker && cp .env.example .env    # set strong SECRET_KEY / *_
 docker compose up -d
 ```
 
+### Try it with synthetic data (no setup, no patient data)
+
+The console ships a self-contained synthetic demonstration — no PI-CAI data required:
+
+```bash
+cd services/api
+python build_demo.py        # generate non-identifiable synthetic demo models
+./run_local.sh 8080         # http://127.0.0.1:8080  (admin / changeme)
+```
+
+Sign in, pick a `DEMO-###` case, and toggle **break imaging** to watch the imaging
+reliability collapse and MoRA down-weight imaging (or defer). All demo data is randomly
+generated — no patient data is involved.
+
 **Security.** The console enforces login but is **not hardened for the open
 internet** — bind it to LAN/loopback and put it behind a reverse proxy with HTTPS or
 a VPN; never expose the port directly. Inference is **CPU-only** (no GPU/torch at

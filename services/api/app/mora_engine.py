@@ -32,6 +32,12 @@ PIPELINE_ROOT = os.environ.get(
     os.path.abspath(os.path.join(_HERE, "..", "..", "ai", "califusion-cnn")),
 )
 MODELS_DIR = os.environ.get("MODELS_DIR", os.path.join(PIPELINE_ROOT, "models"))
+# Fall back to the bundled SYNTHETIC demo assets when no real deployment models are present,
+# so the console runs out of the box on non-identifiable example data (see build_demo.py).
+if not os.path.exists(os.path.join(MODELS_DIR, "manifest.json")):
+    _demo_dir = os.path.abspath(os.path.join(_HERE, "..", "demo_assets"))
+    if os.path.exists(os.path.join(_demo_dir, "manifest.json")):
+        MODELS_DIR = _demo_dir
 EPS = 1e-6
 
 # decision thresholds on reliability (label-free OOD gating)
