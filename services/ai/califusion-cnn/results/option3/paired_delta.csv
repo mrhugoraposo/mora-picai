@@ -1,0 +1,4 @@
+encoder,fusion_model,delta_auroc_boot,ci_lo,ci_hi,delong_p,delta_cvmean,delta_seed_sd,delta_seed_min,delta_seed_max,ci_excludes_0
+medicalnet,fusion_medicalnet_late,0.0206,-0.032,0.0716,0.4382,0.0226,0.007,0.0097,0.0278,False
+ctfm,fusion_ctfm_late,0.0139,-0.0327,0.0611,0.5629,-0.0039,0.0112,-0.0208,0.0139,False
+r3d18,fusion_r3d18_late,0.0276,-0.0256,0.0792,0.293,0.0129,0.0104,0.0004,0.0276,False

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>{% block title %}MoRA Console{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+tailwind.config = { theme: { extend: { colors: {
+  ink:'#14201c', paper:'#fbfbfa', accent:'#0f6e56', accent2:'#185fa5',
+  warn:'#854f0b', bad:'#a32d2d' } } } }
+</script>
+<style>
+  body{background:#fbfbfa;color:#14201c;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .card{background:#fff;border:1px solid #e7e6e1;border-radius:14px}
+  .pill{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px}
+  .spin{width:18px;height:18px;border:2px solid #cdcdc7;border-top-color:#0f6e56;border-radius:50%;animation:s .7s linear infinite;display:inline-block;vertical-align:middle}
+  @keyframes s{to{transform:rotate(360deg)}}
+  .fade{animation:f .25s ease}@keyframes f{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+</style>
+{% block head %}{% endblock %}
+</head>
+<body class="min-h-full">
+{% if user %}
+<nav class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-[#e7e6e1]">
+  <div class="max-w-6xl mx-auto px-5 flex items-center gap-1 h-14">
+    <a href="/dashboard" class="font-semibold text-[15px] mr-4 flex items-center gap-2">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-accent"></span>MoRA Console</a>
+    {% set nav = [('/dashboard','Dashboard'),('/infer','Live inference'),('/experiments','Experiments'),('/history','History')] %}
+    {% for href,label in nav %}
+      <a href="{{href}}" class="px-3 py-1.5 rounded-lg text-sm {% if request.url.path == href %}bg-accent text-white{% else %}text-[#6b6b66] hover:bg-[#f0efe9]{% endif %}">{{label}}</a>
+    {% endfor %}
+    <div class="ml-auto flex items-center gap-3 text-sm text-[#6b6b66]">
+      <span>{{ user.u }}{% if user.admin %} · admin{% endif %}</span>
+      <a href="/logout" class="px-3 py-1.5 rounded-lg border border-[#e7e6e1] hover:bg-[#f0efe9]">Log out</a>
+    </div>
+  </div>
+</nav>
+{% endif %}
+<main class="max-w-6xl mx-auto px-5 py-7 fade">
+{% block content %}{% endblock %}
+</main>
+<footer class="max-w-6xl mx-auto px-5 py-8 text-xs text-[#9a9a94] border-t border-[#e7e6e1] mt-8">
+  MoRA Research Console · self-hosted · every number is computed live from cached public data with
+  patient-level splits, fixed seeds and bootstrap intervals — nothing fabricated. No patient imaging is served.
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

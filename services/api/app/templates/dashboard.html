@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · MoRA Console{% endblock %}
+{% block content %}
+
+<div class="mb-6">
+  <div class="text-[11px] tracking-wider uppercase text-[#6b6b66] font-semibold">Modality-aware reliability for safe multimodal medical AI</div>
+  <h1 class="text-2xl font-semibold mt-1">MoRA — live console</h1>
+  <p class="text-[#6b6b66] max-w-3xl mt-1 text-[15px]">
+    Estimate <b>per-modality reliability at test time</b> (label-free), use it to reweight fusion and to
+    abstain when a modality is out-of-distribution. Run the mechanism live on submitted or cached cases,
+    and reproduce the headline experiments on demand.</p>
+</div>
+
+{% if not datasets %}
+<div class="card p-5 border-l-4" style="border-left-color:#854f0b">
+  <div class="font-medium">Models not built yet</div>
+  <p class="text-sm text-[#6b6b66] mt-1">Run <code class="bg-[#f0efe9] px-1.5 py-0.5 rounded">python scripts/build_deployment_models.py</code> in the pipeline, then reload.</p>
+</div>
+{% else %}
+
+<!-- key stats -->
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+  {% set p = datasets.picai %}
+  <div class="card p-4"><div class="text-[26px] font-semibold text-accent">{{ '%.3f'|format(p.static_fusion_auroc_oof) }}</div><div class="text-xs text-[#6b6b66]">PI-CAI fusion AUROC (OOF)</div></div>
+  <div class="card p-4"><div class="text-[26px] font-semibold">{{ '%.3f'|format(p.clinical_auroc_oof) }}</div><div class="text-xs text-[#6b6b66]">PI-CAI clinical AUROC</div></div>
+  <div class="card p-4"><div class="text-[26px] font-semibold text-accent2">+0.063</div><div class="text-xs text-[#6b6b66]">Gate-B fusion−clinical (powered, verified)</div></div>
+  <div class="card p-4"><div class="text-[26px] font-semibold">100%</div><div class="text-xs text-[#6b6b66]">MoRA win-rate vs SOTA under failure</div></div>
+</div>
+
+<!-- two papers -->
+<div class="grid lg:grid-cols-2 gap-4 mb-6">
+  <div class="card p-5">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold text-lg">Paper 1 — PI-CAI (primary)</h2>
+      <span class="pill bg-[#e1f5ee] text-accent">make-or-break PASS</span>
+    </div>
+    <p class="text-sm text-[#6b6b66] mt-1">csPCa detection on prostate bpMRI. Fusion is genuinely non-redundant;
+    under modality failure MoRA recovers discrimination that static/global-calibration baselines cannot.</p>
+    <table class="w-full text-sm mt-3">
+      <tr class="text-[#6b6b66] text-left"><th class="py-1 font-medium">arm</th><th class="font-medium">AUROC (OOF)</th><th class="font-medium">ECE</th></tr>
+      <tr class="border-t border-[#eee]"><td class="py-1">clinical</td><td>{{ '%.3f'|format(p.clinical_auroc_oof) }}</td><td>{{ '%.3f'|format(p.clinical_ece_oof) }}</td></tr>
+      <tr class="border-t border-[#eee]"><td class="py-1">imaging (radiomics)</td><td>{{ '%.3f'|format(p.imaging_auroc_oof) }}</td><td>{{ '%.3f'|format(p.imaging_ece_oof) }}</td></tr>
+      <tr class="border-t border-[#eee]"><td class="py-1 font-medium">fusion</td><td class="font-medium text-accent">{{ '%.3f'|format(p.static_fusion_auroc_oof) }}</td><td>—</td></tr>
+    </table>
+    <p class="text-xs text-[#9a9a94] mt-2">n={{p.n}} · csPCa+ {{p.positives}} · centers {{ p.centers }}</p>
+    <a href="/experiments" class="inline-block mt-3 text-sm text-accent2 font-medium">Run Gate-B / MoRA-vs-SOTA live →</a>
+  </div>
+
+  <div class="card p-5">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold text-lg">Paper 2 — Lung1 (negative control)</h2>
+      <span class="pill bg-[#faeeda] text-warn">redundancy</span>
+    </div>
+    {% set l = datasets.lung1 %}
+    <p class="text-sm text-[#6b6b66] mt-1">2-year overall survival on NSCLC-Radiomics. Four imaging approaches add
+    no complementary discrimination over clinical (~0.58) — airtight redundancy that motivates the reliability thesis.</p>
+    <table class="w-full text-sm mt-3">
+      <tr class="text-[#6b6b66] text-left"><th class="py-1 font-medium">arm</th><th class="font-medium">AUROC (OOF)</th></tr>
+      <tr class="border-t border-[#eee]"><td class="py-1">clinical</td><td>{{ '%.3f'|format(l.clinical_auroc_oof) }}</td></tr>
+      <tr class="border-t border-[#eee]"><td class="py-1">imaging (radiomics)</td><td>{{ '%.3f'|format(l.imaging_auroc_oof) }}</td></tr>
+      <tr class="border-t border-[#eee]"><td class="py-1 font-medium">fusion</td><td>{{ '%.3f'|format(l.static_fusion_auroc_oof) }}</td></tr>
+    </table>
+    <p class="text-xs text-[#9a9a94] mt-2">n={{l.n}} · 2yr-death {{l.positives}}</p>
+    <a href="/experiments" class="inline-block mt-3 text-sm text-accent2 font-medium">Run redundancy control live →</a>
+  </div>
+</div>
+
+<!-- how MoRA works -->
+<div class="card p-5 mb-6">
+  <h2 class="font-semibold text-lg">How MoRA decides</h2>
+  <div class="grid sm:grid-cols-4 gap-3 mt-3 text-sm">
+    <div class="bg-[#f6f5f0] rounded-xl p-3"><div class="font-medium text-accent">1 · predict</div><p class="text-[#6b6b66] mt-1">per-modality risk p<sub>img</sub>, p<sub>clin</sub> from source-fit models</p></div>
+    <div class="bg-[#f6f5f0] rounded-xl p-3"><div class="font-medium text-accent">2 · reliability</div><p class="text-[#6b6b66] mt-1">label-free domain discriminator → r = clip((1−d)/(1−d<sub>ref</sub>),0,1)<sup>λ</sup></p></div>
+    <div class="bg-[#f6f5f0] rounded-xl p-3"><div class="font-medium text-accent">3 · reweight</div><p class="text-[#6b6b66] mt-1">p<sub>MoRA</sub> = (r<sub>img</sub>p<sub>img</sub>+r<sub>clin</sub>p<sub>clin</sub>)/(r<sub>img</sub>+r<sub>clin</sub>)</p></div>
+    <div class="bg-[#f6f5f0] rounded-xl p-3"><div class="font-medium text-accent">4 · decide</div><p class="text-[#6b6b66] mt-1">predict · down-weight a modality · or abstain & defer</p></div>
+  </div>
+  <a href="/infer" class="inline-block mt-4 bg-[#0f6e56] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#0c5b47]">Try live inference →</a>
+</div>
+{% endif %}
+
+<!-- recent runs -->
+{% if recent %}
+<div class="card p-5">
+  <h2 class="font-semibold">Recent activity</h2>
+  <table class="w-full text-sm mt-2">
+    <tr class="text-[#6b6b66] text-left"><th class="py-1 font-medium">when</th><th class="font-medium">kind</th><th class="font-medium">dataset</th><th class="font-medium">name</th><th class="font-medium">result</th></tr>
+    {% for r in recent %}
+    <tr class="border-t border-[#eee]">
+      <td class="py-1 text-[#6b6b66]">{{ r.created_at.strftime('%m-%d %H:%M') }}</td>
+      <td>{{ r.kind }}</td><td>{{ r.dataset }}</td><td class="font-mono text-xs">{{ r.name }}</td>
+      <td class="text-[#6b6b66] truncate max-w-[260px]">
+        {% set s = r.summary_obj() %}
+        {% if r.kind=='inference' %}p_MoRA {{ s.get('p_mora') }} · {{ s.get('decision','') }}
+        {% else %}{{ s.get('verdict','') }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

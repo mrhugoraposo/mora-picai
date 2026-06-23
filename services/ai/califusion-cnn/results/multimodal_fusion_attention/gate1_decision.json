@@ -1,0 +1,18 @@
+{
+  "gate": "Gate 1 \u2014 signal floor",
+  "threshold": 0.63,
+  "fusion_auroc_mean": 0.4797,
+  "fusion_auroc_sd": 0.0911,
+  "fusion_auroc_per_seed": [
+    0.58,
+    0.5242,
+    0.4054,
+    0.5478,
+    0.341
+  ],
+  "clinical_auroc_mean": NaN,
+  "image_auroc_mean": NaN,
+  "clinical_anchor_full_field": 0.583,
+  "intersection_clinical_cv": 0.578,
+  "decision": "FAIL"
+}

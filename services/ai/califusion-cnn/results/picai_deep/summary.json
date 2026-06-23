@@ -1,0 +1,219 @@
+{
+  "experiment": "deep bpMRI encoder vs radiomics as imaging arm for MoRA on PI-CAI",
+  "leakage_controls": [
+    "patches built from intensity/geometry only (no labels)",
+    "embeddings are out-of-fold (each case embedded by a 5-fold model that excluded it)",
+    "downstream heads/calibrators/discriminators fit on train/source only",
+    "identical controlled-failure protocol to radiomics harness"
+  ],
+  "deep_encoder": {
+    "model": "compact 3D CNN (~0.3M params, in=3ch t2w/adc/hbv), BCE pos-weighted, early-stop",
+    "oof_auroc": 0.7488,
+    "emb_dim": 128,
+    "n": 1476,
+    "pos": 425,
+    "roi": {
+      "K_slices": 12,
+      "fov_mm": 80.0,
+      "out_hw": 96
+    }
+  },
+  "gate_b": {
+    "deep_imaging_auroc": 0.7548,
+    "radiomics_imaging_auroc": 0.7751,
+    "radiomics_imaging_ref": 0.773,
+    "deep_fusion_auroc": 0.7871,
+    "radiomics_fusion_auroc": 0.8106,
+    "radiomics_fusion_ref": 0.804,
+    "deep_imaging_ece": 0.0294,
+    "radiomics_imaging_ece": 0.1304,
+    "verdict": "deep imaging-only and fusion slightly BELOW radiomics on discrimination; deep is much better calibrated (lower ECE)"
+  },
+  "shift_discriminator_auc": {
+    "deep": 0.7427,
+    "radiomics": 0.9217,
+    "clinical": 0.6104,
+    "radiomics_ref": 0.83,
+    "verdict": "deep embeddings are LESS site-separable than radiomics (0.74 vs 0.92): the deep encoder learned more site-invariant features, so the shift signal is NOT sharper on deep"
+  },
+  "makeorbreak_failure": {
+    "severity4": {
+      "deep": {
+        "auroc": {
+          "clinical": 0.7432,
+          "static": 0.6808,
+          "TransCal/CPCS": 0.6808,
+          "evidential/TMC": 0.6778,
+          "MoRA": 0.709
+        },
+        "ece": {
+          "clinical": 0.0403,
+          "static": 0.0921,
+          "TransCal/CPCS": 0.1385,
+          "evidential/TMC": 0.1566,
+          "MoRA": 0.0605
+        },
+        "mora_delta_winrate": {
+          "static": [
+            0.0282,
+            1.0
+          ],
+          "TransCal/CPCS": [
+            0.0282,
+            1.0
+          ],
+          "evidential/TMC": [
+            0.0312,
+            0.9
+          ]
+        },
+        "selective_risk_80": {
+          "weighted_conformal": 0.3029,
+          "mora_deferral": 0.3015
+        }
+      },
+      "radiomics": {
+        "auroc": {
+          "clinical": 0.7432,
+          "static": 0.6843,
+          "TransCal/CPCS": 0.6843,
+          "evidential/TMC": 0.6663,
+          "MoRA": 0.6999
+        },
+        "ece": {
+          "clinical": 0.0403,
+          "static": 0.0884,
+          "TransCal/CPCS": 0.1246,
+          "evidential/TMC": 0.1873,
+          "MoRA": 0.0694
+        },
+        "mora_delta_winrate": {
+          "static": [
+            0.0157,
+            1.0
+          ],
+          "TransCal/CPCS": [
+            0.0157,
+            1.0
+          ],
+          "evidential/TMC": [
+            0.0336,
+            1.0
+          ]
+        }
+      },
+      "margin_vs_radiomics": {
+        "static": {
+          "deep_delta": 0.0282,
+          "radiomics_delta": 0.0157,
+          "widened": true,
+          "margin_change": 0.0125
+        },
+        "TransCal/CPCS": {
+          "deep_delta": 0.0282,
+          "radiomics_delta": 0.0157,
+          "widened": true,
+          "margin_change": 0.0125
+        },
+        "evidential/TMC": {
+          "deep_delta": 0.0312,
+          "radiomics_delta": 0.0336,
+          "widened": false,
+          "margin_change": -0.0024
+        }
+      }
+    },
+    "severity8": {
+      "deep": {
+        "auroc": {
+          "clinical": 0.7432,
+          "static": 0.673,
+          "TransCal/CPCS": 0.673,
+          "evidential/TMC": 0.651,
+          "MoRA": 0.7051
+        },
+        "ece": {
+          "clinical": 0.0403,
+          "static": 0.1037,
+          "TransCal/CPCS": 0.1513,
+          "evidential/TMC": 0.1792,
+          "MoRA": 0.0657
+        },
+        "mora_delta_winrate": {
+          "static": [
+            0.0321,
+            1.0
+          ],
+          "TransCal/CPCS": [
+            0.0321,
+            1.0
+          ],
+          "evidential/TMC": [
+            0.054,
+            1.0
+          ]
+        },
+        "selective_risk_80": {
+          "weighted_conformal": 0.315,
+          "mora_deferral": 0.3131
+        }
+      },
+      "radiomics": {
+        "auroc": {
+          "clinical": 0.7432,
+          "static": 0.672,
+          "TransCal/CPCS": 0.672,
+          "evidential/TMC": 0.6331,
+          "MoRA": 0.6907
+        },
+        "ece": {
+          "clinical": 0.0403,
+          "static": 0.1047,
+          "TransCal/CPCS": 0.1435,
+          "evidential/TMC": 0.2095,
+          "MoRA": 0.075
+        },
+        "mora_delta_winrate": {
+          "static": [
+            0.0186,
+            1.0
+          ],
+          "TransCal/CPCS": [
+            0.0186,
+            1.0
+          ],
+          "evidential/TMC": [
+            0.0575,
+            1.0
+          ]
+        }
+      },
+      "margin_vs_radiomics": {
+        "static": {
+          "deep_delta": 0.0321,
+          "radiomics_delta": 0.0186,
+          "widened": true,
+          "margin_change": 0.0135
+        },
+        "TransCal/CPCS": {
+          "deep_delta": 0.0321,
+          "radiomics_delta": 0.0186,
+          "widened": true,
+          "margin_change": 0.0135
+        },
+        "evidential/TMC": {
+          "deep_delta": 0.054,
+          "radiomics_delta": 0.0575,
+          "widened": false,
+          "margin_change": -0.0035
+        }
+      }
+    }
+  },
+  "headline": {
+    "mora_beats_sota_with_deep": true,
+    "deep_widens_mora_margin_vs_static_transcal": true,
+    "mora_best_ece_among_fusion": true,
+    "note": "Deep arm is slightly weaker than radiomics on raw discrimination and on site-shift separability, BUT it WIDENS MoRA's advantage over static/TransCal-CPCS under modality failure at both severities, and MoRA retains best ECE. Margin vs evidential/TMC is comparable. Selective-risk edge over weighted-conformal shrinks to ~coin-flip with deep."
+  }
+}

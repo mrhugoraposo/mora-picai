@@ -1,0 +1,37 @@
+{
+  "severity": 4.0,
+  "seeds": 10,
+  "lam": 2.0,
+  "auroc": {
+    "clinical": 0.7432,
+    "static": 0.6843,
+    "TransCal/CPCS": 0.6843,
+    "evidential/TMC": 0.6663,
+    "MoRA": 0.6999
+  },
+  "ece": {
+    "clinical": 0.0403,
+    "static": 0.0884,
+    "TransCal/CPCS": 0.1246,
+    "evidential/TMC": 0.1873,
+    "MoRA": 0.0694
+  },
+  "mora_delta_winrate": {
+    "static": [
+      0.0157,
+      1.0
+    ],
+    "TransCal/CPCS": [
+      0.0157,
+      1.0
+    ],
+    "evidential/TMC": [
+      0.0336,
+      1.0
+    ]
+  },
+  "selective_risk_80": {
+    "weighted_conformal": 0.2829,
+    "mora_deferral": 0.2744
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "title": "CaliFusion-CNN / MoRA: analysis code and research console for test-time per-modality reliability in multimodal clinical decision support",
+  "upload_type": "software",
+  "description": "<p>Code for Modality-Aware Reliability (MoRA): a label-free, test-time, per-modality reliability estimator that drives reliability-gated multimodal fusion and modality-attributed conformal abstention. Validated for clinically-significant prostate cancer detection on the public PI-CAI cohort (biparametric MRI + structured clinical variables); the repository also includes the NSCLC-Radiomics (&quot;Lung1&quot;) imaging-redundancy and probability-calibration audit, and an authenticated FastAPI research console for running and visualizing the experiments. The repository ships code, configuration, and computed result metrics only; no patient imaging, marksheet, or derived embeddings are redistributed. Datasets must be obtained from their official sources.</p>",
+  "creators": [
+    {
+      "name": "Raposo, Hugo",
+      "orcid": "0009-0004-0857-5586"
+    }
+  ],
+  "keywords": [
+    "multimodal fusion",
+    "uncertainty calibration",
+    "dataset shift",
+    "selective prediction",
+    "conformal abstention",
+    "reliability estimation",
+    "prostate MRI",
+    "medical imaging",
+    "reproducibility"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isDerivedFrom",
+      "identifier": "10.5281/zenodo.6624726",
+      "resource_type": "dataset",
+      "scheme": "doi"
+    }
+  ],
+  "access_right": "open"
+}

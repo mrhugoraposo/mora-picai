@@ -1,0 +1,2 @@
+model,auroc,auprc,sensitivity,specificity,ppv,npv,f1,kappa,ece,brier,nll,auroc_boot95ci
+Clinical-only (hist_gboost),0.583±0.016,0.660±0.011,0.547±0.211,0.562±0.191,0.655±0.016,0.473±0.046,0.571±0.121,0.107±0.033,0.139±0.011,0.262±0.009,0.746±0.022,0.555 (0.498-0.612)

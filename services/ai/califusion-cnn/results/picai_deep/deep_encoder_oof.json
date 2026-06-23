@@ -1,0 +1,11 @@
+{
+  "deep_oof_auroc": 0.7488,
+  "n": 1476,
+  "pos": 425,
+  "emb_dim": 128,
+  "seed": 0,
+  "K": 12,
+  "fov_mm": 80.0,
+  "out_hw": 96,
+  "model": "compact 3D CNN (~0.3M params, in=3ch t2w/adc/hbv), BCE pos-weighted, early-stop"
+}

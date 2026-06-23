@@ -1,0 +1,20 @@
+{
+  "n_patients": 419,
+  "n_features": 50,
+  "cv": "5x5 repeated stratified",
+  "auroc": {
+    "logreg": {
+      "mean": 0.5873,
+      "sd": 0.0127
+    },
+    "hist_gboost": {
+      "mean": 0.5333,
+      "sd": 0.0234
+    }
+  },
+  "best_radiomics_auroc": 0.5873,
+  "deep_image_arm_auroc": 0.415,
+  "clinical_arm_auroc": 0.582,
+  "gate1_threshold": 0.63,
+  "verdict": "imaging signal EXISTS (radiomics >> deep arm) -> deep encoder is the bottleneck"
+}

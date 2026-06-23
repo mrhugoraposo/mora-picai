@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Live inference · MoRA Console{% endblock %}
+{% block content %}
+
+<div class="mb-5">
+  <h1 class="text-2xl font-semibold">Live MoRA inference</h1>
+  <p class="text-[#6b6b66] text-[15px] mt-1">Run the reliability mechanism on a cached case (REPLAY) or your own
+    imaging + clinical data (UPLOAD). Every output below is computed live with the persisted source-fit models.</p>
+</div>
+
+{% if not datasets %}
+<div class="card p-5 border-l-4" style="border-left-color:#854f0b">Models not built — run <code>build_deployment_models.py</code>.</div>
+{% else %}
+<div class="grid lg:grid-cols-5 gap-5">
+  <!-- left: input -->
+  <div class="lg:col-span-2 space-y-4">
+    <div class="card p-4">
+      <div class="flex gap-1 mb-3 bg-[#f0efe9] rounded-lg p-1 text-sm">
+        <button id="tab-replay" onclick="setMode('replay')" class="flex-1 py-1.5 rounded-md bg-white font-medium">Replay a case</button>
+        <button id="tab-upload" onclick="setMode('upload')" class="flex-1 py-1.5 rounded-md text-[#6b6b66]">Upload</button>
+      </div>
+
+      <label class="block text-sm font-medium mb-1">Dataset</label>
+      <select id="dataset" onchange="onDataset()" class="w-full border border-[#dcdbd5] rounded-lg px-3 py-2 text-sm mb-3">
+        {% for d in datasets %}<option value="{{d}}">{{ 'PI-CAI (prostate bpMRI · csPCa)' if d=='picai' else 'Lung1 (NSCLC · 2-yr survival)' }}</option>{% endfor %}
+      </select>
+
+      <!-- REPLAY -->
+      <div id="panel-replay">
+        <label class="block text-sm font-medium mb-1">Case</label>
+        <select id="case_id" class="w-full border border-[#dcdbd5] rounded-lg px-3 py-2 text-sm mb-3"></select>
+        <label class="flex items-center gap-2 text-sm text-[#6b6b66] mb-3 select-none">
+          <input type="checkbox" id="break_imaging" class="rounded"> Simulate scanner shift / broken imaging
+          <span class="pill bg-[#fcebeb] text-bad">demo OOD</span>
+        </label>
+        <div id="sev-row" class="hidden mb-3">
+          <label class="block text-xs text-[#6b6b66] mb-1">Corruption severity</label>
+          <input type="range" id="severity" min="1" max="8" value="5" step="1" class="w-full" oninput="document.getElementById('sevval').textContent=this.value">
+          <div class="text-xs text-[#6b6b66]">σ = <span id="sevval">5</span></div>
+        </div>
+      </div>
+
+      <!-- UPLOAD -->
+      <div id="panel-upload" class="hidden">
+        <div id="clin-form" class="space-y-2 mb-3"></div>
+        <label class="block text-sm font-medium mb-1">Imaging file <span class="text-[#9a9a94] font-normal">(.mha/.nii.gz/.nii — optional)</span></label>
+        <input type="file" id="imaging_file" class="w-full text-sm mb-2" accept=".mha,.nii,.nii.gz,.gz">
+        <label class="block text-sm font-medium mb-1">…or paste a radiomics vector <span class="text-[#9a9a94] font-normal">(model feature order)</span></label>
+        <textarea id="radiomics_vector" rows="3" placeholder="comma/space/newline-separated feature values"
+          class="w-full border border-[#dcdbd5] rounded-lg px-3 py-2 text-xs font-mono mb-1"></textarea>
+        <p class="text-xs text-[#9a9a94] mb-2">Tip: if extraction is infeasible for an arbitrary upload, leave imaging blank for clinical-only, or use REPLAY.</p>
+      </div>
+
+      <button id="runbtn" onclick="runInfer()" class="w-full bg-[#0f6e56] text-white rounded-lg py-2.5 text-sm font-medium hover:bg-[#0c5b47]">Run MoRA</button>
+    </div>
+    <div class="card p-4 text-xs text-[#6b6b66] leading-relaxed">
+      <div class="font-medium text-[#14201c] mb-1">What you'll see</div>
+      Per-modality risk and <b>reliability</b> (is each modality in-distribution?), the reliability-weighted
+      fused risk, the decision (predict / down-weight / abstain), and a step-by-step derivation of the mechanism.
+    </div>
+  </div>
+
+  <!-- right: output -->
+  <div class="lg:col-span-3">
+    <div id="empty" class="card p-10 text-center text-[#9a9a94]">
+      <div class="text-4xl mb-2">◷</div>Pick a case and run MoRA to see the live output.
+    </div>
+    <div id="loading" class="hidden card p-10 text-center text-[#6b6b66]"><span class="spin"></span><div class="mt-2 text-sm">Running the mechanism…</div></div>
+    <div id="error" class="hidden card p-5 border-l-4 text-sm" style="border-left-color:#a32d2d"></div>
+    <div id="result" class="hidden space-y-4"></div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+const CASES = {{ cases|tojson }};
+const SCHEMAS = {{ clinical_schemas|tojson }};
+let mode = 'replay';
+
+function setMode(m){
+  mode = m;
+  document.getElementById('panel-replay').classList.toggle('hidden', m!=='replay');
+  document.getElementById('panel-upload').classList.toggle('hidden', m!=='upload');
+  document.getElementById('tab-replay').className = 'flex-1 py-1.5 rounded-md '+(m==='replay'?'bg-white font-medium':'text-[#6b6b66]');
+  document.getElementById('tab-upload').className = 'flex-1 py-1.5 rounded-md '+(m==='upload'?'bg-white font-medium':'text-[#6b6b66]');
+}
+function onDataset(){
+  const d = document.getElementById('dataset').value;
+  // cases
+  const sel = document.getElementById('case_id'); sel.innerHTML='';
+  (CASES[d]||[]).forEach(c=>{
+    const o=document.createElement('option'); o.value=c.id;
+    o.textContent = `${c.id} — ${c.label==1?'positive':'negative'}` + (c.center?` · ${c.center}`:'');
+    sel.appendChild(o);
+  });
+  // clinical form
+  const cf = document.getElementById('clin-form'); cf.innerHTML='';
+  (SCHEMAS[d]||[]).forEach(f=>{
+    const wrap=document.createElement('div');
+    let inp;
+    if(f.type==='select'){
+      inp=`<select id="cf_${f.name}" class="w-full border border-[#dcdbd5] rounded-lg px-3 py-2 text-sm">`+
+          f.options.map(o=>`<option>${o}</option>`).join('')+`</select>`;
+    } else {
+      inp=`<input id="cf_${f.name}" type="number" step="any" placeholder="${f.ph||''}" class="w-full border border-[#dcdbd5] rounded-lg px-3 py-2 text-sm">`;
+    }
+    wrap.innerHTML=`<label class="block text-xs text-[#6b6b66] mb-0.5">${f.label}</label>${inp}`;
+    cf.appendChild(wrap);
+  });
+}
+document.getElementById('break_imaging').addEventListener('change',e=>{
+  document.getElementById('sev-row').classList.toggle('hidden', !e.target.checked);
+});
+
+function bar(label, val, color){
+  const pct = Math.round((val||0)*100);
+  return `<div class="mb-2"><div class="flex justify-between text-xs mb-0.5"><span class="text-[#6b6b66]">${label}</span><span class="font-medium">${val==null?'—':val.toFixed(3)}</span></div>
+    <div class="h-2 rounded bg-[#eee]"><div class="h-2 rounded" style="width:${pct}%;background:${color}"></div></div></div>`;
+}
+
+async function runInfer(){
+  const d = document.getElementById('dataset').value;
+  document.getElementById('empty').classList.add('hidden');
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('error').classList.add('hidden');
+  document.getElementById('loading').classList.remove('hidden');
+  const btn=document.getElementById('runbtn'); btn.disabled=true; btn.classList.add('opacity-60');
+
+  const fd = new FormData();
+  fd.append('mode', mode); fd.append('dataset', d);
+  if(mode==='replay'){
+    fd.append('case_id', document.getElementById('case_id').value);
+    if(document.getElementById('break_imaging').checked){ fd.append('break_imaging','1'); }
+    fd.append('severity', document.getElementById('severity').value);
+  } else {
+    (SCHEMAS[d]||[]).forEach(f=>{ const el=document.getElementById('cf_'+f.name); if(el) fd.append(f.name, el.value); });
+    const file=document.getElementById('imaging_file').files[0]; if(file) fd.append('imaging_file', file);
+    fd.append('radiomics_vector', document.getElementById('radiomics_vector').value);
+  }
+  try{
+    const r = await fetch('/infer', {method:'POST', body:fd});
+    const j = await r.json();
+    document.getElementById('loading').classList.add('hidden');
+    if(!r.ok || j.error){ showError(j.error||('HTTP '+r.status)); return; }
+    render(j);
+  }catch(e){ document.getElementById('loading').classList.add('hidden'); showError(String(e)); }
+  finally{ btn.disabled=false; btn.classList.remove('opacity-60'); }
+}
+function showError(m){ const e=document.getElementById('error'); e.textContent='Error: '+m; e.classList.remove('hidden'); }
+
+function render(j){
+  const dec = {predict:['#0f6e56','#e1f5ee'], downweight_imaging:['#854f0b','#faeeda'],
+    downweight_clinical:['#854f0b','#faeeda'], abstain:['#a32d2d','#fcebeb']}[j.decision_code]||['#185fa5','#e7eef7'];
+  const truth = j.case_label==null ? '' :
+    `<span class="pill" style="background:#eee;color:#555">ground truth: ${j.case_label==1?'positive':'negative'}</span>`;
+  let html = `
+  <div class="card p-5">
+    <div class="flex items-start justify-between gap-3 flex-wrap">
+      <div>
+        <div class="text-xs text-[#6b6b66] uppercase tracking-wide font-semibold">decision</div>
+        <div class="text-xl font-semibold mt-0.5" style="color:${dec[0]}">${j.decision}</div>
+      </div>
+      <div class="text-right">
+        <div class="text-[28px] font-semibold">${j.p_mora.toFixed(3)}</div>
+        <div class="text-xs text-[#6b6b66]">fused risk (p<sub>MoRA</sub>) · thr ${j.threshold}</div>
+      </div>
+    </div>
+    <div class="rounded-lg px-3 py-2 mt-3 text-sm" style="background:${dec[1]};color:${dec[0]}">${j.rationale}</div>
+    <div class="mt-2 flex gap-2 flex-wrap text-xs">${truth}
+      <span class="pill" style="background:#eee;color:#555">dataset: ${j.dataset}</span>
+      <span class="pill" style="background:#eee;color:#555">source: ${j.source}</span></div>
+  </div>
+
+  <div class="grid sm:grid-cols-2 gap-4">
+    <div class="card p-4">
+      <div class="font-medium text-sm mb-2">Imaging modality</div>
+      ${bar('risk p_img', j.p_img, '#185fa5')}
+      ${bar('reliability r_img', j.r_img, j.r_img!=null&&j.r_img<0.6?'#a32d2d':'#0f6e56')}
+      <div class="text-xs text-[#6b6b66] mt-1">attribution ${(j.attribution_imaging*100).toFixed(0)}% of the fusion</div>
+    </div>
+    <div class="card p-4">
+      <div class="font-medium text-sm mb-2">Clinical modality</div>
+      ${bar('risk p_clin', j.p_clin, '#185fa5')}
+      ${bar('reliability r_clin', j.r_clin, j.r_clin<0.6?'#a32d2d':'#0f6e56')}
+      <div class="text-xs text-[#6b6b66] mt-1">attribution ${(j.attribution_clinical*100).toFixed(0)}% of the fusion</div>
+    </div>
+  </div>
+
+  <div class="card p-5">
+    <div class="font-medium mb-1">Step-by-step derivation</div>
+    <p class="text-xs text-[#6b6b66] mb-3">Exactly how the output was produced — feature use → per-modality prediction → reliability → reweighting → decision.</p>
+    <ol class="space-y-2">`;
+  j.steps.forEach(s=>{
+    html += `<li class="flex gap-3">
+      <span class="shrink-0 w-6 h-6 rounded-full bg-[#0f6e56] text-white text-xs flex items-center justify-center font-semibold">${s.n}</span>
+      <div class="text-sm"><div class="font-medium">${s.title}</div>
+        <div class="text-[#3f3f3b]">${s.detail}</div>
+        ${s.output?`<div class="text-xs text-[#6b6b66] mt-0.5 font-mono">${Object.entries(s.output).map(([k,v])=>`${k}=${v}`).join('  ')}</div>`:''}
+      </div></li>`;
+  });
+  html += `</ol></div>`;
+  const el=document.getElementById('result'); el.innerHTML=html; el.classList.remove('hidden');
+}
+
+onDataset(); setMode('replay');
+</script>
+{% endblock %}

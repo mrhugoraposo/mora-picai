@@ -1,0 +1,17 @@
+model,kind,auroc_cvmean,auroc_cvsd,auroc_boot,ci_lo,ci_hi,brier,ece
+clinical[gboost],clinical,0.5733,0.0075,0.5692,0.5113,0.6261,0.2628,0.1402
+radiomics[logreg],radiomics,0.6013,0.0117,0.5949,0.5401,0.6505,0.2394,0.0567
+cnn25d_imagenet(ref),image_dl,0.415,,0.415,,,,
+fusion_radiomics_late,fusion_comparator,0.6139,0.008,0.6083,0.553,0.6637,0.2331,0.0457
+foundation_medicalnet[gboost],foundation_image,0.5685,0.0047,0.5724,0.5167,0.6253,0.305,0.2369
+fusion_medicalnet_concat,fusion,0.5718,0.0083,0.5727,0.5149,0.626,0.3011,0.2422
+fusion_medicalnet_late,fusion,0.5959,0.0068,0.5898,0.5363,0.6423,0.2476,0.1112
+fusion_medicalnet_stack,fusion,0.5866,0.0059,0.5807,0.5249,0.6356,0.2357,0.0157
+foundation_ctfm[logreg],foundation_image,0.5176,0.01,0.5359,0.4815,0.5943,0.2879,0.1797
+fusion_ctfm_concat,fusion,0.5204,0.0194,0.5211,0.4658,0.5795,0.3174,0.2573
+fusion_ctfm_late,fusion,0.5695,0.0096,0.5831,0.5295,0.6384,0.2482,0.0728
+fusion_ctfm_stack,fusion,0.5601,0.0085,0.5646,0.5097,0.6216,0.2383,0.0117
+foundation_r3d18[gboost],foundation_image,0.552,0.0167,0.5663,0.5101,0.6186,0.2897,0.2064
+fusion_r3d18_concat,fusion,0.5526,0.0189,0.5597,0.505,0.6149,0.2948,0.2152
+fusion_r3d18_late,fusion,0.5862,0.0133,0.5968,0.5379,0.6504,0.2435,0.0776
+fusion_r3d18_stack,fusion,0.5746,0.0153,0.5901,0.5324,0.6447,0.2349,0.012

@@ -1,0 +1,32 @@
+{
+  "medicalnet": {
+    "corr_img_clinical": 0.004,
+    "clinical_acc": 0.5799522673031027,
+    "foundation_acc": 0.568019093078759,
+    "fusion_acc": 0.6062052505966588,
+    "clin_wrong_n": 176,
+    "img_fixes_clin_wrong": 87,
+    "fusion_fixes_clin_wrong": 65,
+    "frac_clin_errors_fixed_by_fusion": 0.3693181818181818
+  },
+  "ctfm": {
+    "corr_img_clinical": -0.009,
+    "clinical_acc": 0.5799522673031027,
+    "foundation_acc": 0.5799522673031027,
+    "fusion_acc": 0.5847255369928401,
+    "clin_wrong_n": 176,
+    "img_fixes_clin_wrong": 91,
+    "fusion_fixes_clin_wrong": 50,
+    "frac_clin_errors_fixed_by_fusion": 0.2840909090909091
+  },
+  "r3d18": {
+    "corr_img_clinical": -0.051,
+    "clinical_acc": 0.5799522673031027,
+    "foundation_acc": 0.5727923627684964,
+    "fusion_acc": 0.6014319809069213,
+    "clin_wrong_n": 176,
+    "img_fixes_clin_wrong": 87,
+    "fusion_fixes_clin_wrong": 55,
+    "frac_clin_errors_fixed_by_fusion": 0.3125
+  }
+}

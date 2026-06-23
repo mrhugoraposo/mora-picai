@@ -1,0 +1,17 @@
+{
+  "collection": "NSCLC Radiogenomics",
+  "horizon_days": 730,
+  "clinical_rows": 211,
+  "dead_total": 63,
+  "usable_clinical": 186,
+  "positives_clinical": 36,
+  "ct_patients": 211,
+  "seg_patients": 144,
+  "usable_with_ct": 186,
+  "positives_with_ct": 36,
+  "usable_with_seg": 133,
+  "positives_with_seg": 28,
+  "negatives_with_seg": 105,
+  "prevalence_seg": 0.211,
+  "license": "CC BY 3.0"
+}

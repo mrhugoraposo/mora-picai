@@ -1,0 +1,49 @@
+# MoRA Research Console — home-server deployment.
+#   docker compose up -d           (build + run api + postgres)
+#   docker compose logs -f api     (watch startup; admin user is seeded on boot)
+#
+# SECURITY: this binds to the host and enforces login, but is NOT hardened for the open
+# internet. Bind to your LAN, and put it behind a reverse proxy with HTTPS (Caddy/nginx)
+# or a VPN. Never expose port 8000 directly to the internet. See the README.
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mora}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-mora}
+    volumes:
+      - mora_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mora}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # not published to the host — only the api service reaches it on the compose network
+
+  api:
+    build:
+      context: ../..                       # repo root (Dockerfile copies services/* from here)
+      dockerfile: infrastructure/docker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
+      APP_ADMIN_USER: ${APP_ADMIN_USER:-admin}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:?set APP_ADMIN_PASSWORD in .env}
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-mora}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-mora}
+    volumes:
+      # prebuilt models + cached features, mounted READ-ONLY (never baked into the image)
+      - ../../services/ai/califusion-cnn/models:/app/models:ro
+      - ../../services/ai/califusion-cnn/data/processed:/app/services/ai/califusion-cnn/data/processed:ro
+      - ../../services/ai/califusion-cnn/data/raw/PI-CAI/marksheet.csv:/app/services/ai/califusion-cnn/data/raw/PI-CAI/marksheet.csv:ro
+    ports:
+      # bind to LAN/loopback only — change 127.0.0.1 to your LAN IP to reach from other devices,
+      # but keep it OFF the public internet (use a reverse proxy / VPN for remote access).
+      - "127.0.0.1:8000:8000"
+
+volumes:
+  mora_pgdata:

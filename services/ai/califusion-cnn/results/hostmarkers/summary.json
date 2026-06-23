@@ -1,0 +1,26 @@
+{
+  "n": 420,
+  "auroc": {
+    "clinical": {
+      "model": "gboost",
+      "mean": 0.5787,
+      "sd": 0.0063
+    },
+    "host_only": {
+      "model": "logreg",
+      "mean": 0.567,
+      "sd": 0.0062
+    },
+    "fusion": {
+      "model": "gboost",
+      "mean": 0.5706,
+      "sd": 0.0177
+    }
+  },
+  "delta_fusion_clinical": -0.0081,
+  "delta_ci": [
+    -0.0825,
+    0.0592
+  ],
+  "gate6_pass": false
+}

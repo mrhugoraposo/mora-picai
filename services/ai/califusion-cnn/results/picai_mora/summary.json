@@ -1,0 +1,42 @@
+{
+  "n_target": 76,
+  "pos_target": 13,
+  "results": {
+    "clinical-only": {
+      "auroc": 0.8632,
+      "brier": 0.1328,
+      "ece": 0.1999
+    },
+    "imaging-only": {
+      "auroc": 0.569,
+      "brier": 0.173,
+      "ece": 0.2075
+    },
+    "static fusion": {
+      "auroc": 0.8168,
+      "brier": 0.1334,
+      "ece": 0.1522
+    },
+    "global-reliability": {
+      "auroc": 0.779,
+      "brier": 0.1496,
+      "ece": 0.1478
+    },
+    "per-modal (MoRA)": {
+      "auroc": 0.707,
+      "brier": 0.1453,
+      "ece": 0.1548
+    }
+  },
+  "r_img_source": 0.569,
+  "r_img_zgt": 0.513,
+  "r_clin_source": 0.56,
+  "r_clin_zgt": 0.557,
+  "permod_minus_static_auroc": -0.1099,
+  "ci": [
+    -0.2852,
+    0.0011
+  ],
+  "h2_preview": false,
+  "powered": true
+}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}History · MoRA Console{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Run history</h1>
+{% if not runs %}
+<div class="card p-8 text-center text-[#9a9a94]">No runs yet. Run an inference or experiment to populate the audit trail.</div>
+{% else %}
+<div class="card p-5 overflow-auto">
+  <table class="w-full text-sm">
+    <tr class="text-[#6b6b66] text-left"><th class="py-1 font-medium">time (UTC)</th><th class="font-medium">user</th><th class="font-medium">kind</th><th class="font-medium">dataset</th><th class="font-medium">name</th><th class="font-medium">summary</th></tr>
+    {% for r in runs %}
+    <tr class="border-t border-[#eee] align-top">
+      <td class="py-1.5 text-[#6b6b66] whitespace-nowrap">{{ r.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+      <td>{{ users.get(r.user_id, '—') }}</td>
+      <td><span class="pill {{ 'bg-[#e1f5ee] text-accent' if r.kind=='inference' else 'bg-[#e7eef7] text-accent2' }}">{{ r.kind }}</span></td>
+      <td>{{ r.dataset }}</td>
+      <td class="font-mono text-xs">{{ r.name }}</td>
+      <td class="text-[#6b6b66] text-xs">
+        {% set s = r.summary_obj() %}
+        {% if r.kind=='inference' %}
+          p_MoRA <b>{{ s.get('p_mora') }}</b> · p_img {{ s.get('p_img') }} · p_clin {{ s.get('p_clin') }} ·
+          r_img {{ s.get('r_img') }} · r_clin {{ s.get('r_clin') }} → {{ s.get('decision') }}
+        {% else %}{{ s.get('headline','') }} — {{ s.get('verdict','') }}{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

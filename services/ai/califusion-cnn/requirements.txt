@@ -1,0 +1,16 @@
+# Core (clinical/tabular arm — runs CPU-only, no GPU needed)
+numpy>=1.24
+pandas>=2.0
+scikit-learn>=1.3
+scipy>=1.10
+matplotlib>=3.7
+pyyaml>=6.0
+# Imaging + fusion arm (GPU recommended)
+torch>=2.1
+torchvision>=0.16
+pydicom>=2.4
+SimpleITK>=2.3
+rt-utils>=1.2            # RTSTRUCT GTV mask parsing
+pydicom-seg>=0.4         # SEG mask parsing
+nbiatoolkit>=2.0         # robust TCIA bulk download (optional)
+tqdm>=4.66

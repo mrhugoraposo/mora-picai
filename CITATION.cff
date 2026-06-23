@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+title: "CaliFusion-CNN / MoRA: analysis code and research console for test-time per-modality reliability in multimodal clinical decision support"
+type: software
+authors:
+  - family-names: Raposo
+    given-names: Hugo
+    orcid: "https://orcid.org/0009-0004-0857-5586"
+keywords:
+  - multimodal fusion
+  - uncertainty calibration
+  - dataset shift
+  - selective prediction
+  - conformal abstention
+  - reliability estimation
+  - prostate MRI
+license: MIT
+repository-code: "https://github.com/mrhugoraposo/mora-picai"

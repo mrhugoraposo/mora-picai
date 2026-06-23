@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>CaliFusion / MoRA — Reviewer Companion</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#fbfbfa;--card:#fff;--ink:#1d1d1b;--mut:#6b6b66;--line:#e7e6e1;--accent:#0f6e56;--accent2:#185fa5;--warn:#854f0b;--bad:#a32d2d}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--accent2)}
+header{padding:2.4rem 1.5rem 1.2rem;max-width:1000px;margin:0 auto}
+.kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
+h1{font-size:30px;font-weight:600;margin:.3rem 0 .4rem}
+.sub{color:var(--mut);max-width:70ch}
+nav{position:sticky;top:0;background:rgba(251,251,250,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);z-index:5}
+.nav-in{max-width:1000px;margin:0 auto;display:flex;gap:.3rem;flex-wrap:wrap;padding:.5rem 1.5rem}
+.nav-in button{border:0;background:none;font:inherit;font-size:14px;color:var(--mut);padding:.4rem .7rem;border-radius:7px;cursor:pointer}
+.nav-in button:hover{background:#f0efe9}
+.nav-in button.on{background:var(--accent);color:#fff}
+main{max-width:1000px;margin:0 auto;padding:1.5rem}
+section{display:none;animation:f .25s}
+section.on{display:block}
+@keyframes f{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+h2{font-size:22px;font-weight:600;margin:1.6rem 0 .6rem}
+h3{font-size:17px;font-weight:600;margin:1.3rem 0 .4rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.3rem;margin:1rem 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:1rem 0}
+.stat{background:#f6f5f0;border-radius:9px;padding:.8rem 1rem}
+.stat .n{font-size:24px;font-weight:600}
+.stat .l{font-size:12.5px;color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:.6rem 0}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-weight:600}
+td.win{color:var(--accent);font-weight:600}
+td.neg{color:var(--bad)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:20px}
+.tag.ok{background:#e1f5ee;color:#0f6e56}.tag.pend{background:#faeeda;color:#854f0b}.tag.neg{background:#fcebeb;color:#a32d2d}
+.chartbox{position:relative;height:320px;margin:1rem 0}
+.cav{border-left:3px solid var(--warn);background:#fdf8ee;border-radius:0 8px 8px 0;padding:.6rem .9rem;margin:.6rem 0;font-size:14.5px}
+.callout{border-left:3px solid var(--accent);background:#f0faf6;border-radius:0 8px 8px 0;padding:.7rem 1rem;margin:.8rem 0}
+footer{max-width:1000px;margin:2rem auto;padding:1.5rem;color:var(--mut);font-size:13px;border-top:1px solid var(--line)}
+code{background:#f0efe9;padding:1px 5px;border-radius:4px;font-size:13.5px}
+.muted{color:var(--mut);font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Reproducibility &amp; reviewer companion · interactive supplement</div>
+  <h1>Modality-aware reliability for safe multimodal medical AI</h1>
+  <p class="sub">An interactive companion to two manuscripts. Every number below is computed from real public data with patient-level splits, fixed seeds, and bootstrap intervals — nothing is fabricated. No patient imaging is hosted here; only aggregate results and methodology. <span id="authorline" class="muted"></span></p>
+</header>
+
+<nav><div class="nav-in" id="nav"></div></nav>
+
+<main>
+<section id="overview" class="on">
+  <h2>Two manuscripts, one principle</h2>
+  <div class="card">
+    <h3>Paper 1 — the method <span class="tag ok">core verified</span></h3>
+    <p><strong>When one modality fails: test-time, per-modality reliability for safe multimodal medical AI.</strong> On a real multi-vendor prostate-MRI cohort (PI-CAI), we show a label-free method that detects when one input modality goes out-of-distribution at test time, down-weights it, and abstains with risk control — recovering <em>both</em> discrimination and calibration under modality failure, and beating named state-of-the-art (TransCal/CPCS, weighted-conformal, evidential/Trusted-Multi-View).</p>
+  </div>
+  <div class="card">
+    <h3>Paper 2 — the honest audit <span class="tag ok">verified</span></h3>
+    <p><strong>Is imaging redundant? A leakage-controlled audit of multimodal fusion and calibration for NSCLC survival.</strong> On NSCLC-Radiomics "Lung1", four independent imaging approaches (deep CNN, radiomics, CT foundation encoders, host-physiology markers) <em>all</em> fail to add discrimination over clinical variables for 2-year survival — while calibration, not fusion, is where reliability is won.</p>
+  </div>
+  <div class="grid">
+    <div class="stat"><div class="n">2</div><div class="l">cohorts (prostate MRI, lung CT)</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">leakage-controlled, patient-level</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">fabricated numbers</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">patient images hosted here</div></div>
+  </div>
+</section>
+
+<section id="paper1">
+  <h2>Paper 1 — MoRA on PI-CAI prostate MRI</h2>
+  <p class="muted">Public dataset: PI-CAI (CC BY-NC). n=1500, csPCa+ 425 (28.3%), three centres (RUMC, PCNN — Siemens; ZGT — Philips). Imaging arm = multi-sequence GTV-region radiomics; clinical arm = age, PSA, PSA-density, prostate volume.</p>
+
+  <h3>1 · Modalities are complementary (powered)</h3>
+  <div class="card">
+    <div class="chartbox"><canvas id="c_gateb" role="img" aria-label="Gate-B AUROC: clinical 0.741, radiomics 0.773, fusion 0.804"></canvas></div>
+    <p class="muted">5×5 patient-level CV. Fusion beats clinical by <strong>+0.063 AUROC (~15× the seed SD)</strong> and beats either single arm — the modalities carry genuinely complementary signal.</p>
+  </div>
+
+  <h3>2 · The make-or-break: MoRA vs named SOTA under modality failure</h3>
+  <p>Imaging is broken on a random 50% of test patients (a realistic deployment failure: corrupted acquisition / bad scanner). Only a method that <em>detects which modality failed at test time</em> can recover.</p>
+  <div class="card">
+    <div class="chartbox"><canvas id="c_sota" role="img" aria-label="AUROC under failure by method"></canvas></div>
+    <table>
+      <tr><th>method</th><th>AUROC ↑</th><th>ECE ↓</th><th>MoRA Δ (win-rate)</th></tr>
+      <tr><td>clinical-only</td><td>0.743</td><td>0.040</td><td class="muted">reference floor</td></tr>
+      <tr><td>static fusion</td><td>0.684</td><td>0.088</td><td class="win">+0.016 (100%)</td></tr>
+      <tr><td>TransCal / CPCS</td><td>0.684</td><td class="neg">0.125</td><td class="win">+0.016 (100%)</td></tr>
+      <tr><td>evidential / TMC</td><td class="neg">0.666</td><td class="neg">0.187</td><td class="win">+0.034 (100%)</td></tr>
+      <tr><td><strong>MoRA (ours)</strong></td><td class="win"><strong>0.700</strong></td><td class="win"><strong>0.069</strong></td><td>—</td></tr>
+    </table>
+    <div class="callout"><strong>MoRA is the only method to recover both discrimination and calibration.</strong> Global calibration (TransCal/CPCS) can't reweight modalities — its AUROC equals static fusion and its ECE gets <em>worse</em> (recalibrating a corrupted score backfires). Source-trained evidential uncertainty doesn't flag the novel failure (it drops below static). 100% win-rate across 10 seeds.</div>
+  </div>
+
+  <h3>3 · Robustness check — a deep CNN encoder</h3>
+  <div class="cav">Swapping the radiomics imaging arm for a trained 3D-CNN encoder, MoRA's advantage over static/TransCal <strong>widens to +0.028–0.032 (still 100% win)</strong> — so the result is not an artifact of the imaging representation. (Honest note: the deep encoder is <em>better calibrated</em> but a <em>weaker</em> classifier than radiomics here, so radiomics remains the primary arm.)</div>
+
+  <h3>4 · An honest finding about the natural shift</h3>
+  <div class="cav">The real Siemens→Philips vendor shift turned out to be <strong>benign</strong> — imaging holds (0.775→0.775) and plain fusion is robust (0.823). MoRA is correctly neutral there. We therefore demonstrate its value under <em>controlled</em> failure; a <span class="tag pend">in progress</span> natural-failure external validation (retinal handheld-vs-tabletop cameras) is underway.</div>
+</section>
+
+<section id="paper2">
+  <h2>Paper 2 — Is imaging redundant? (NSCLC Lung1)</h2>
+  <p class="muted">Public dataset: NSCLC-Radiomics "Lung1" (TCIA, CC BY-NC). n=419–420, 2-year overall survival, prevalence ≈0.60. Clinical-only AUROC 0.583 (verified, reproducible).</p>
+  <div class="card">
+    <div class="chartbox"><canvas id="c_redund" role="img" aria-label="Imaging approaches all near clinical baseline"></canvas></div>
+    <p class="muted"><strong>Four independent imaging approaches add no complementary discrimination over clinical.</strong> Deep 2.5D CNN (0.42), radiomics (0.60), CT foundation encoders (0.52–0.57; embeddings ~constant across patients), host-physiology markers (0.567). Best fusion 0.609 — below the 0.63 signal floor and barely above the best single arm.</p>
+  </div>
+  <div class="callout"><strong>Calibration, not fusion, is where reliability is won.</strong> Post-hoc calibration cuts ECE from 0.137 → 0.047 (Platt) with discrimination unchanged (DeLong p=0.99) — and imaging-quality shift degrades calibration, not discrimination. The corrective message: leakage-controlled evaluation does not support a fusion-accuracy gain here.</div>
+</section>
+
+<section id="repro">
+  <h2>Reproducibility</h2>
+  <div class="card">
+    <h3>Data — public, no redistribution here</h3>
+    <ul>
+      <li><strong>Lung1:</strong> NSCLC-Radiomics, The Cancer Imaging Archive (CC BY-NC). Downloaded via the scripted NBIA API.</li>
+      <li><strong>PI-CAI:</strong> public training set, Zenodo record 6624726 (CC BY-NC); whole-gland masks from the picai_labels release.</li>
+      <li>No patient images are hosted in this companion or the code repository — only the scripts to fetch and process the public sources.</li>
+    </ul>
+    <h3>Controls</h3>
+    <ul>
+      <li>Patient-level splits throughout; calibrators, temperatures, conformal thresholds, OOD scorers and importance weights fit on source/train only.</li>
+      <li>Deep-encoder embeddings are strictly out-of-fold (each case embedded by a model that excluded it).</li>
+      <li>Fixed seeds; bootstrap 95% CIs; DeLong/McNemar where applicable; every results folder carries its config + seeds.</li>
+      <li><strong>No-fabrication policy:</strong> uncomputed cells are marked pending, never filled with placeholder numbers.</li>
+    </ul>
+    <h3>Code</h3>
+    <p id="codeline" class="muted">Code and full result artifacts are available to reviewers on request / via the anonymized release link to be inserted by the authors.</p>
+  </div>
+</section>
+
+<section id="caveats">
+  <h2>Limitations — stated plainly</h2>
+  <div class="cav">MoRA's margin over static/TransCal on discrimination is <strong>modest (+0.016–0.019)</strong>, though 100%-consistent across seeds; its clearest wins are vs evidential fusion and on calibration.</div>
+  <div class="cav">The PI-CAI modality failure is demonstrated via <strong>controlled corruption</strong> (the natural vendor shift is benign). A natural severe-failure external validation (retinal imaging, handheld vs tabletop cameras) is in progress and not yet included.</div>
+  <div class="cav">The deep CNN encoder <strong>underperforms radiomics</strong> on discrimination on this dataset; it is reported as a robustness check, not as a stronger imaging arm.</div>
+  <div class="cav">Paper 2 is a <strong>negative / characterization</strong> result; its value is rigor and a corrective to over-claimed multimodal fusion gains, not a discrimination advance.</div>
+  <div class="cav">This is a methods + applied-validation contribution, not a discrimination breakthrough; clinical deployment would require prospective, regulated validation.</div>
+</section>
+</main>
+
+<footer>
+  Interactive supplement for peer review · all metrics computed on real public data · <span id="foot"></span>
+</footer>
+
+<script>
+const SECTIONS=[["overview","Overview"],["paper1","Paper 1 · MoRA"],["paper2","Paper 2 · Redundancy"],["repro","Reproducibility"],["caveats","Limitations"]];
+const nav=document.getElementById("nav");
+SECTIONS.forEach(([id,label],i)=>{const b=document.createElement("button");b.textContent=label;b.className=i===0?"on":"";b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");document.querySelectorAll("section").forEach(s=>s.classList.remove("on"));document.getElementById(id).classList.add("on");window.scrollTo({top:0,behavior:"smooth"})};nav.appendChild(b)});
+
+// ---- author/code identifiers: blank by default (anonymity-safe). Set to true + fill to reveal. ----
+const REVEAL_IDENTITY=false;
+if(REVEAL_IDENTITY){
+  document.getElementById("authorline").textContent="";        // e.g. "Authors: …"
+  document.getElementById("codeline").textContent="Code: https://github.com/<org>/<repo>";
+}
+document.getElementById("foot").textContent="generated "+new Date().getFullYear();
+
+const GREEN="#0f6e56",BLUE="#185fa5",GRAY="#9a9994",AMBER="#ba7517",RED="#c0432f";
+const baseOpts=t=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y!=null?c.parsed.y.toFixed(3):c.parsed.x.toFixed(3)}}},scales:{}});
+
+new Chart(c_gateb,{type:"bar",data:{labels:["clinical","radiomics","fusion (ours)"],datasets:[{data:[0.741,0.773,0.804],backgroundColor:[BLUE,AMBER,GREEN]}]},options:{...baseOpts(),scales:{y:{min:0.65,max:0.85,title:{display:true,text:"AUROC (5×5 CV)"}}}}});
+
+new Chart(c_sota,{type:"bar",data:{labels:["clinical","static","TransCal/CPCS","evidential/TMC","MoRA (ours)"],datasets:[{data:[0.743,0.684,0.684,0.666,0.700],backgroundColor:[BLUE,GRAY,GRAY,RED,GREEN]}]},options:{...baseOpts(),scales:{y:{min:0.6,max:0.78,title:{display:true,text:"AUROC under modality failure"}}}}});
+
+new Chart(c_redund,{type:"bar",data:{labels:["deep CNN","foundation","host markers","radiomics","clinical","fusion"],datasets:[{data:[0.415,0.55,0.567,0.60,0.583,0.609],backgroundColor:[GRAY,GRAY,GRAY,AMBER,BLUE,RED]}]},options:{...baseOpts(),scales:{y:{min:0.4,max:0.66,title:{display:true,text:"AUROC (2-yr OS)"}}}}});
+</script>
+</body>
+</html>

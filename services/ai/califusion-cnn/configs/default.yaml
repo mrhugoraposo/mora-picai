@@ -1,0 +1,49 @@
+# CaliFusion-CNN — default configuration
+project: califusion-cnn
+seed_list: [0, 1, 2, 3, 4]
+
+data:
+  collection: NSCLC-Radiomics            # TCIA "Lung1"
+  clinical_csv_url: "https://www.cancerimagingarchive.net/wp-content/uploads/NSCLC-Radiomics-Lung1.clinical-version3-Oct-2019.csv"
+  horizon_days: 730                       # 2-year overall survival
+  numeric: [age]
+  categorical: [gender, clinical.T.Stage, Clinical.N.Stage, Clinical.M.Stage, Overall.Stage, Histology]
+  raw_dir: data/raw/NSCLC-Radiomics
+  processed_dir: data/processed
+
+preprocess:
+  window_level: -600
+  window_width: 1500
+  roi: 96
+  k_slices: 3                             # 2.5D depth (channels)
+
+split:
+  ratios: [0.70, 0.15, 0.15]              # patient-level stratified
+  calib_frac_of_train: 0.20
+
+model:
+  backbone: resnet18                      # resnet18 | resnet50
+  pretrained: true
+  img_dim: 256
+  clin_dim: 64
+  fusion: gated                           # concat | gated | attention
+
+train:
+  epochs: 40
+  batch_size: 32
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  early_stopping_patience: 8
+
+calibration:
+  methods: [uncalibrated, temperature, platt, isotonic]
+
+evaluation:
+  n_bootstrap: 1000
+  operating_point: youden               # selected on validation only
+  deferral_coverages: [1.0, 0.9, 0.8, 0.7, 0.6]
+
+shift:
+  image: [noise_light, noise_heavy, blur, lowres, compression]
+  clinical_missing: [0.10, 0.30, 0.50]
+  prevalence: [0.30, 0.50, 0.70]

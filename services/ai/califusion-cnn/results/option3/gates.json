@@ -1,0 +1,35 @@
+{
+  "best_encoder_by_fusion": "medicalnet",
+  "G1_foundation_beats_cnn_and_radiomics": {
+    "pass": false,
+    "best_foundation_auroc": 0.5685,
+    "cnn25d": 0.415,
+    "radiomics_floor": 0.587
+  },
+  "G2_fusion_beats_clinical": {
+    "pass": false,
+    "delta_auroc": 0.0226,
+    "min_required": 0.03,
+    "preferred": 0.05,
+    "ci_excludes_0": false,
+    "paired_ci": [
+      -0.032,
+      0.0716
+    ],
+    "seed_delta_min": 0.0097,
+    "calibration_ok": true,
+    "clinical_ece": 0.1402,
+    "fusion_ece": 0.1112
+  },
+  "G3_complementarity": {
+    "pass": true,
+    "corr_img_clinical": 0.004,
+    "frac_clin_errors_fixed": 0.3693181818181818,
+    "clinical_acc": 0.5799522673031027,
+    "fusion_acc": 0.6062052505966588
+  },
+  "ALL_GATES_PASS": false,
+  "G3_corrected_pass": false,
+  "ALL_GATES_PASS_corrected": false,
+  "recommendation": "reliability/calibration paper"
+}

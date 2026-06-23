@@ -1,0 +1,18 @@
+{
+  "n": 1476,
+  "pos": 419,
+  "gateb": {
+    "clinical_auroc": 0.7453,
+    "radiomics_imaging_auroc": 0.7751,
+    "deep_imaging_auroc": 0.7548,
+    "radiomics_fusion_auroc": 0.8106,
+    "deep_fusion_auroc": 0.7871,
+    "deep_imaging_ece": 0.0294,
+    "radiomics_imaging_ece": 0.1304
+  },
+  "shift_discriminator_auc": {
+    "deep": 0.7427,
+    "radiomics": 0.9217,
+    "clinical": 0.6104
+  }
+}

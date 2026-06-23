@@ -1,0 +1,38 @@
+{
+  "clinical_control": {
+    "auroc": 0.5692,
+    "ece": 0.1402,
+    "brier": 0.2628
+  },
+  "radiomics_clean": {
+    "auroc": 0.5949,
+    "ece": 0.0567,
+    "brier": 0.2394
+  },
+  "foundation_clean": {
+    "auroc": 0.5636,
+    "ece": 0.1083,
+    "brier": 0.2575
+  },
+  "foundation_shift": {
+    "auroc": 0.5599,
+    "ece": 0.1525,
+    "brier": 0.2681
+  },
+  "fusion_late_clean": {
+    "auroc": 0.5901,
+    "ece": 0.0573,
+    "brier": 0.2384
+  },
+  "fusion_late_shift": {
+    "auroc": 0.5901,
+    "ece": 0.089,
+    "brier": 0.2411
+  },
+  "_deltas": {
+    "foundation_auroc_drop": 0.0037,
+    "foundation_ece_rise": 0.0442,
+    "fusion_auroc_drop": 0.0,
+    "fusion_ece_rise": 0.0317
+  }
+}

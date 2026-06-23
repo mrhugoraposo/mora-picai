@@ -1,0 +1,29 @@
+MIT License
+
+Copyright (c) 2026 Hugo Raposo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+----
+NOTE: This license covers the CODE in this repository only. No patient data is
+redistributed here. The evaluation datasets are licensed separately and must be
+obtained from their official sources:
+  - PI-CAI (biparametric prostate MRI + clinical): CC BY-NC, Zenodo 10.5281/zenodo.6624726
+  - NSCLC-Radiomics ("Lung1") (CT + clinical): CC BY-NC 3.0, via The Cancer Imaging Archive
+See README.md and services/ai/califusion-cnn/data/README_DATA.md for acquisition.

@@ -1,0 +1,18 @@
+# MoRA Research Console — web service deps (on top of the pipeline's requirements)
+fastapi>=0.110
+uvicorn[standard]>=0.29
+jinja2>=3.1
+python-multipart>=0.0.9
+passlib[bcrypt]>=1.7.4
+bcrypt<4.1
+itsdangerous>=2.1
+sqlalchemy>=2.0
+psycopg2-binary>=2.9      # Postgres driver (prod / Docker)
+
+# ML / inference reuse (already in the pipeline venv; pinned here for the Docker image)
+scikit-learn>=1.4
+numpy
+pandas
+scipy
+joblib
+SimpleITK            # optional: UPLOAD-mode radiomics extraction from .mha/.nii.gz

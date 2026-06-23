@@ -1,0 +1,324 @@
+{
+  "n": 419,
+  "prevalence": 0.5967,
+  "cv": "5x5 stratified patient-level",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "encoders_used": {
+    "medicalnet": "MedicalNet (23 medical datasets), pretrained",
+    "ctfm": "CT-FM SSL (148k CT scans, IDC), pretrained",
+    "r3d18": "Kinetics-400 (generic 3D video), pretrained"
+  },
+  "clinical_model": "clinical[gboost]",
+  "established_refs": {
+    "cnn25d": 0.415,
+    "radiomics_floor": 0.587
+  },
+  "model_comparison": [
+    {
+      "model": "clinical[gboost]",
+      "kind": "clinical",
+      "auroc_cvmean": 0.5733,
+      "auroc_cvsd": 0.0075,
+      "auroc_boot": 0.5692,
+      "ci_lo": 0.5113,
+      "ci_hi": 0.6261,
+      "brier": 0.2628,
+      "ece": 0.1402
+    },
+    {
+      "model": "radiomics[logreg]",
+      "kind": "radiomics",
+      "auroc_cvmean": 0.6013,
+      "auroc_cvsd": 0.0117,
+      "auroc_boot": 0.5949,
+      "ci_lo": 0.5401,
+      "ci_hi": 0.6505,
+      "brier": 0.2394,
+      "ece": 0.0567
+    },
+    {
+      "model": "cnn25d_imagenet(ref)",
+      "kind": "image_dl",
+      "auroc_cvmean": 0.415,
+      "auroc_cvsd": null,
+      "auroc_boot": 0.415,
+      "ci_lo": null,
+      "ci_hi": null,
+      "brier": null,
+      "ece": null
+    },
+    {
+      "model": "fusion_radiomics_late",
+      "kind": "fusion_comparator",
+      "auroc_cvmean": 0.6139,
+      "auroc_cvsd": 0.008,
+      "auroc_boot": 0.6083,
+      "ci_lo": 0.553,
+      "ci_hi": 0.6637,
+      "brier": 0.2331,
+      "ece": 0.0457
+    },
+    {
+      "model": "foundation_medicalnet[gboost]",
+      "kind": "foundation_image",
+      "auroc_cvmean": 0.5685,
+      "auroc_cvsd": 0.0047,
+      "auroc_boot": 0.5724,
+      "ci_lo": 0.5167,
+      "ci_hi": 0.6253,
+      "brier": 0.305,
+      "ece": 0.2369
+    },
+    {
+      "model": "fusion_medicalnet_concat",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5718,
+      "auroc_cvsd": 0.0083,
+      "auroc_boot": 0.5727,
+      "ci_lo": 0.5149,
+      "ci_hi": 0.626,
+      "brier": 0.3011,
+      "ece": 0.2422
+    },
+    {
+      "model": "fusion_medicalnet_late",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5959,
+      "auroc_cvsd": 0.0068,
+      "auroc_boot": 0.5898,
+      "ci_lo": 0.5363,
+      "ci_hi": 0.6423,
+      "brier": 0.2476,
+      "ece": 0.1112
+    },
+    {
+      "model": "fusion_medicalnet_stack",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5866,
+      "auroc_cvsd": 0.0059,
+      "auroc_boot": 0.5807,
+      "ci_lo": 0.5249,
+      "ci_hi": 0.6356,
+      "brier": 0.2357,
+      "ece": 0.0157
+    },
+    {
+      "model": "foundation_ctfm[logreg]",
+      "kind": "foundation_image",
+      "auroc_cvmean": 0.5176,
+      "auroc_cvsd": 0.01,
+      "auroc_boot": 0.5359,
+      "ci_lo": 0.4815,
+      "ci_hi": 0.5943,
+      "brier": 0.2879,
+      "ece": 0.1797
+    },
+    {
+      "model": "fusion_ctfm_concat",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5204,
+      "auroc_cvsd": 0.0194,
+      "auroc_boot": 0.5211,
+      "ci_lo": 0.4658,
+      "ci_hi": 0.5795,
+      "brier": 0.3174,
+      "ece": 0.2573
+    },
+    {
+      "model": "fusion_ctfm_late",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5695,
+      "auroc_cvsd": 0.0096,
+      "auroc_boot": 0.5831,
+      "ci_lo": 0.5295,
+      "ci_hi": 0.6384,
+      "brier": 0.2482,
+      "ece": 0.0728
+    },
+    {
+      "model": "fusion_ctfm_stack",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5601,
+      "auroc_cvsd": 0.0085,
+      "auroc_boot": 0.5646,
+      "ci_lo": 0.5097,
+      "ci_hi": 0.6216,
+      "brier": 0.2383,
+      "ece": 0.0117
+    },
+    {
+      "model": "foundation_r3d18[gboost]",
+      "kind": "foundation_image",
+      "auroc_cvmean": 0.552,
+      "auroc_cvsd": 0.0167,
+      "auroc_boot": 0.5663,
+      "ci_lo": 0.5101,
+      "ci_hi": 0.6186,
+      "brier": 0.2897,
+      "ece": 0.2064
+    },
+    {
+      "model": "fusion_r3d18_concat",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5526,
+      "auroc_cvsd": 0.0189,
+      "auroc_boot": 0.5597,
+      "ci_lo": 0.505,
+      "ci_hi": 0.6149,
+      "brier": 0.2948,
+      "ece": 0.2152
+    },
+    {
+      "model": "fusion_r3d18_late",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5862,
+      "auroc_cvsd": 0.0133,
+      "auroc_boot": 0.5968,
+      "ci_lo": 0.5379,
+      "ci_hi": 0.6504,
+      "brier": 0.2435,
+      "ece": 0.0776
+    },
+    {
+      "model": "fusion_r3d18_stack",
+      "kind": "fusion",
+      "auroc_cvmean": 0.5746,
+      "auroc_cvsd": 0.0153,
+      "auroc_boot": 0.5901,
+      "ci_lo": 0.5324,
+      "ci_hi": 0.6447,
+      "brier": 0.2349,
+      "ece": 0.012
+    }
+  ],
+  "paired_delta": [
+    {
+      "encoder": "medicalnet",
+      "fusion_model": "fusion_medicalnet_late",
+      "delta_auroc_boot": 0.0206,
+      "ci_lo": -0.032,
+      "ci_hi": 0.0716,
+      "delong_p": 0.4382,
+      "delta_cvmean": 0.0226,
+      "delta_seed_sd": 0.007,
+      "delta_seed_min": 0.0097,
+      "delta_seed_max": 0.0278,
+      "ci_excludes_0": false
+    },
+    {
+      "encoder": "ctfm",
+      "fusion_model": "fusion_ctfm_late",
+      "delta_auroc_boot": 0.0139,
+      "ci_lo": -0.0327,
+      "ci_hi": 0.0611,
+      "delong_p": 0.5629,
+      "delta_cvmean": -0.0039,
+      "delta_seed_sd": 0.0112,
+      "delta_seed_min": -0.0208,
+      "delta_seed_max": 0.0139,
+      "ci_excludes_0": false
+    },
+    {
+      "encoder": "r3d18",
+      "fusion_model": "fusion_r3d18_late",
+      "delta_auroc_boot": 0.0276,
+      "ci_lo": -0.0256,
+      "ci_hi": 0.0792,
+      "delong_p": 0.293,
+      "delta_cvmean": 0.0129,
+      "delta_seed_sd": 0.0104,
+      "delta_seed_min": 0.0004,
+      "delta_seed_max": 0.0276,
+      "ci_excludes_0": false
+    }
+  ],
+  "complementarity": {
+    "medicalnet": {
+      "corr_img_clinical": 0.004,
+      "clinical_acc": 0.5799522673031027,
+      "foundation_acc": 0.568019093078759,
+      "fusion_acc": 0.6062052505966588,
+      "clin_wrong_n": 176,
+      "img_fixes_clin_wrong": 87,
+      "fusion_fixes_clin_wrong": 65,
+      "frac_clin_errors_fixed_by_fusion": 0.3693181818181818
+    },
+    "ctfm": {
+      "corr_img_clinical": -0.009,
+      "clinical_acc": 0.5799522673031027,
+      "foundation_acc": 0.5799522673031027,
+      "fusion_acc": 0.5847255369928401,
+      "clin_wrong_n": 176,
+      "img_fixes_clin_wrong": 91,
+      "fusion_fixes_clin_wrong": 50,
+      "frac_clin_errors_fixed_by_fusion": 0.2840909090909091
+    },
+    "r3d18": {
+      "corr_img_clinical": -0.051,
+      "clinical_acc": 0.5799522673031027,
+      "foundation_acc": 0.5727923627684964,
+      "fusion_acc": 0.6014319809069213,
+      "clin_wrong_n": 176,
+      "img_fixes_clin_wrong": 87,
+      "fusion_fixes_clin_wrong": 55,
+      "frac_clin_errors_fixed_by_fusion": 0.3125
+    }
+  },
+  "gates": {
+    "best_encoder_by_fusion": "medicalnet",
+    "G1_foundation_beats_cnn_and_radiomics": {
+      "pass": false,
+      "best_foundation_auroc": 0.5685,
+      "cnn25d": 0.415,
+      "radiomics_floor": 0.587
+    },
+    "G2_fusion_beats_clinical": {
+      "pass": false,
+      "delta_auroc": 0.0226,
+      "min_required": 0.03,
+      "preferred": 0.05,
+      "ci_excludes_0": false,
+      "paired_ci": [
+        -0.032,
+        0.0716
+      ],
+      "seed_delta_min": 0.0097,
+      "calibration_ok": true,
+      "clinical_ece": 0.1402,
+      "fusion_ece": 0.1112
+    },
+    "G3_complementarity": {
+      "pass": true,
+      "corr_img_clinical": 0.004,
+      "frac_clin_errors_fixed": 0.3693181818181818,
+      "clinical_acc": 0.5799522673031027,
+      "fusion_acc": 0.6062052505966588,
+      "pass_corrected_on_inspection": false,
+      "note": "nominal PASS is spurious: the fusion AUROC gain it implies is itself not significant (G2 fail, paired CI crosses 0); corr~0 reflects a near-constant embedding, not independent signal"
+    },
+    "ALL_GATES_PASS": false,
+    "ALL_GATES_PASS_corrected": false
+  },
+  "embedding_diagnostic": {
+    "medicalnet": {
+      "cross_patient_emb_corr_abs_mean": 0.992,
+      "embedding_collapse": true
+    },
+    "ctfm": {
+      "cross_patient_emb_corr_abs_mean": 0.773,
+      "embedding_collapse": true
+    },
+    "r3d18": {
+      "cross_patient_emb_corr_abs_mean": 0.622,
+      "embedding_collapse": true
+    }
+  },
+  "embedding_diagnostic_note": "frozen encoders return near-identical embeddings across patients (cross-patient corr 0.63-0.99) -> dominated by global CT appearance, not tumor-discriminative; explains why image-only <= clinical and apparent complementarity is an averaging artifact",
+  "recommendation": "COMMIT TO RELIABILITY/CALIBRATION PAPER (MORA); include Option-3 as documented negative control. Foundation encoders do not rescue imaging/fusion accuracy."
+}

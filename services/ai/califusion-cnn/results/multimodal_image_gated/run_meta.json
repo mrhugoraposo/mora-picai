@@ -1,0 +1,38 @@
+{
+  "device": "mps",
+  "torch": "2.12.1",
+  "args": {
+    "arms": [
+      "image"
+    ],
+    "fusion": "gated",
+    "backbone": "resnet18",
+    "epochs": 60,
+    "batch": 32,
+    "lr": 0.0005,
+    "k_slices": 3,
+    "img_dim": 256,
+    "clin_dim": 64,
+    "seeds": 5,
+    "n_boot": 1000
+  },
+  "n_matched": 419,
+  "prevalence": 0.5967,
+  "git_sha": "no-git",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "arm_test_auroc_uncal": {
+    "image": [
+      0.3981,
+      0.4284,
+      0.4958,
+      0.5541,
+      0.552
+    ]
+  }
+}

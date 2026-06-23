@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+
+# Builds
+.next/
+dist/
+build/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# OS/editor
+.DS_Store
+.vscode/settings.json
+.idea/
+
+# Logs/temp
+*.log
+logs/
+tmp/
+.cache/
+
+# Local data and generated runtime artifacts
+*.sqlite
+*.sqlite3
+*.db
+storage/imports/*
+storage/exports/*
+storage/generated/*
+!storage/imports/.gitkeep
+!storage/exports/.gitkeep
+!storage/generated/.gitkeep
+
+# Python envs / caches
+**/.venv/
+.venv/
+__pycache__/
+*.pyc
+.cache/
+
+# ML data & large artifacts — NEVER commit (patient imaging, caches, embeddings)
+**/data/raw/
+**/data/processed/
+*.npz
+*.npy
+
+# Persisted deployment models, web-app DB, and uploads — NEVER commit
+**/models/
+*.joblib
+**/uploads/
+mora_console.db
+services/api/*.db
+
+# Patient medical imaging file types — hard block (defense-in-depth)
+*.dcm
+*.mha
+*.mhd
+*.nii
+*.nii.gz
+*.zip
+marksheet.csv

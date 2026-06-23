@@ -1,0 +1,67 @@
+{
+  "n_seeds": 20,
+  "severity": 2.5,
+  "lambda": 1.0,
+  "eval": "shifted subset under shift; all patients when clean",
+  "table": {
+    "clean": {
+      "static": {
+        "auroc": 0.564,
+        "brier": 0.2399
+      },
+      "global": {
+        "auroc": 0.5518,
+        "brier": 0.2393
+      },
+      "permod": {
+        "auroc": 0.5565,
+        "brier": 0.2406
+      }
+    },
+    "img_subset": {
+      "static": {
+        "auroc": 0.5018,
+        "brier": 0.2806
+      },
+      "global": {
+        "auroc": 0.501,
+        "brier": 0.2402
+      },
+      "permod": {
+        "auroc": 0.4606,
+        "brier": 0.2492
+      }
+    },
+    "clin_subset": {
+      "static": {
+        "auroc": 0.539,
+        "brier": 0.2456
+      },
+      "global": {
+        "auroc": 0.5277,
+        "brier": 0.2404
+      },
+      "permod": {
+        "auroc": 0.5786,
+        "brier": 0.2485
+      }
+    }
+  },
+  "H2_wins": {
+    "img_subset": {
+      "auroc_permod_vs_static": 0.35,
+      "auroc_permod_vs_global": 0.15,
+      "brier_permod_vs_static": 0.85,
+      "dAUROC_vs_static": -0.0412,
+      "dBrier_vs_static": -0.0314
+    },
+    "clin_subset": {
+      "auroc_permod_vs_static": 0.8,
+      "auroc_permod_vs_global": 0.85,
+      "brier_permod_vs_static": 0.4,
+      "dAUROC_vs_static": 0.0396,
+      "dBrier_vs_static": 0.0029
+    }
+  },
+  "H2_verdict": "NOT SUPPORTED"
+}

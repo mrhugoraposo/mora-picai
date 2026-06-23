@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Experiments · MoRA Console{% endblock %}
+{% block content %}
+
+<div class="mb-5">
+  <h1 class="text-2xl font-semibold">Run experiments live</h1>
+  <p class="text-[#6b6b66] text-[15px] mt-1">Each experiment reuses the verified pipeline logic and is computed
+    on the cached features at request time — seeds, n and CIs reported, nothing fabricated.</p>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-4 mb-2">
+  {% for key, e in experiments.items() %}
+  <div class="card p-4 flex flex-col">
+    <div class="flex items-center justify-between">
+      <span class="pill {{ 'bg-[#e1f5ee] text-accent' if e.dataset=='picai' else 'bg-[#faeeda] text-warn' }}">{{ e.dataset }}</span>
+      <span class="text-[11px] text-[#9a9a94] font-mono">{{ e.script }}</span>
+    </div>
+    <div class="font-semibold mt-2">{{ e.title }}</div>
+    <p class="text-sm text-[#6b6b66] mt-1 flex-1">{{ e.blurb }}</p>
+    {% if key=='mora_failure' %}
+    <div class="flex gap-2 mt-3 text-xs">
+      <label class="flex items-center gap-1">seeds <input type="number" id="seeds_{{key}}" value="10" min="2" max="20" class="w-14 border border-[#dcdbd5] rounded px-2 py-1"></label>
+      <label class="flex items-center gap-1">σ <input type="number" id="sev_{{key}}" value="4" min="1" max="8" step="0.5" class="w-14 border border-[#dcdbd5] rounded px-2 py-1"></label>
+    </div>
+    {% endif %}
+    <button onclick="runExp('{{key}}')" class="mt-3 bg-[#0f6e56] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#0c5b47]">Run</button>
+  </div>
+  {% endfor %}
+</div>
+
+<div id="loading" class="hidden card p-8 text-center text-[#6b6b66] mt-4"><span class="spin"></span><div class="mt-2 text-sm" id="loadmsg">Running…</div></div>
+<div id="error" class="hidden card p-5 border-l-4 text-sm mt-4" style="border-left-color:#a32d2d"></div>
+<div id="result" class="hidden card p-5 mt-4"></div>
+
+{% if recent %}
+<div class="card p-5 mt-4">
+  <h2 class="font-semibold">Recent experiment runs</h2>
+  <table class="w-full text-sm mt-2">
+    <tr class="text-[#6b6b66] text-left"><th class="py-1 font-medium">when</th><th class="font-medium">experiment</th><th class="font-medium">result</th></tr>
+    {% for r in recent %}<tr class="border-t border-[#eee]"><td class="py-1 text-[#6b6b66]">{{ r.created_at.strftime('%m-%d %H:%M') }}</td><td class="font-mono text-xs">{{ r.name }}</td><td class="text-[#6b6b66]">{{ r.summary_obj().get('verdict','') }}</td></tr>{% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+let chart=null;
+async function runExp(name){
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('error').classList.add('hidden');
+  document.getElementById('loadmsg').textContent = 'Running '+name+' on cached features…';
+  document.getElementById('loading').classList.remove('hidden');
+  const fd=new FormData(); fd.append('name', name);
+  if(name==='mora_failure'){ fd.append('seeds', document.getElementById('seeds_'+name).value); fd.append('severity', document.getElementById('sev_'+name).value); }
+  try{
+    const r=await fetch('/experiments/run',{method:'POST',body:fd});
+    const j=await r.json();
+    document.getElementById('loading').classList.add('hidden');
+    if(!r.ok||j.error){ const e=document.getElementById('error'); e.textContent='Error: '+(j.error||r.status); e.classList.remove('hidden'); return; }
+    render(j);
+  }catch(e){ document.getElementById('loading').classList.add('hidden'); const el=document.getElementById('error'); el.textContent='Error: '+e; el.classList.remove('hidden'); }
+}
+function render(j){
+  let rows = j.table.map(t=>`<tr class="border-t border-[#eee]"><td class="py-1">${t.model}</td><td>${t.auroc.toFixed(3)} ± ${t.auroc_sd.toFixed(3)}</td><td>${t.ece.toFixed(3)}</td></tr>`).join('');
+  const repro = JSON.stringify(j.repro, null, 1).replace(/[{}"]/g,'').replace(/\n\s*\n/g,'\n').trim();
+  document.getElementById('result').innerHTML = `
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      <h2 class="font-semibold text-lg">${j.title}</h2>
+      <span class="text-xs text-[#9a9a94]">${j.runtime_s}s · ${j.script}</span>
+    </div>
+    <div class="rounded-lg bg-[#f0faf6] text-accent px-3 py-2 text-sm mt-2">${j.headline}</div>
+    <div class="text-sm font-medium mt-1 text-[#185fa5]">${j.verdict}</div>
+    <div class="grid md:grid-cols-2 gap-4 mt-3">
+      <table class="w-full text-sm"><tr class="text-[#6b6b66] text-left"><th class="py-1 font-medium">model</th><th class="font-medium">AUROC</th><th class="font-medium">ECE</th></tr>${rows}</table>
+      <div><canvas id="chart" height="200"></canvas></div>
+    </div>
+    <details class="mt-3 text-xs"><summary class="cursor-pointer text-[#6b6b66] font-medium">reproducibility metadata</summary>
+      <pre class="bg-[#f6f5f0] rounded-lg p-3 mt-1 overflow-auto">${repro}</pre></details>`;
+  document.getElementById('result').classList.remove('hidden');
+  if(chart) chart.destroy();
+  const c=j.chart;
+  chart=new Chart(document.getElementById('chart'),{type:'bar',
+    data:{labels:c.labels,datasets:[{label:c.ylabel,data:c.values,backgroundColor:c.labels.map(l=>l.toLowerCase().includes('mora')?'#0f6e56':'#185fa5')}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{title:{display:true,text:c.ylabel},suggestedMin:0.4,suggestedMax:0.85}}}});
+}
+</script>
+{% endblock %}

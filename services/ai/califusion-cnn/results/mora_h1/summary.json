@@ -1,0 +1,103 @@
+{
+  "n_seeds": 20,
+  "severity": 2.5,
+  "table_ece_brier_nll": {
+    "clean": {
+      "uncalibrated": {
+        "ece": 0.1717,
+        "brier": 0.2682,
+        "nll": 0.7671
+      },
+      "static_temp": {
+        "ece": 0.0932,
+        "brier": 0.246,
+        "nll": 0.6857
+      },
+      "transcal": {
+        "ece": 0.0964,
+        "brier": 0.2471,
+        "nll": 0.6892
+      },
+      "mora_global": {
+        "ece": 0.0834,
+        "brier": 0.2438,
+        "nll": 0.6807
+      },
+      "mora_permod": {
+        "ece": 0.0829,
+        "brier": 0.2438,
+        "nll": 0.6808
+      }
+    },
+    "img_subset": {
+      "uncalibrated": {
+        "ece": 0.293,
+        "brier": 0.3402,
+        "nll": 1.39
+      },
+      "static_temp": {
+        "ece": 0.1513,
+        "brier": 0.2707,
+        "nll": 0.774
+      },
+      "transcal": {
+        "ece": 0.1565,
+        "brier": 0.2754,
+        "nll": 0.8219
+      },
+      "mora_global": {
+        "ece": 0.1493,
+        "brier": 0.2683,
+        "nll": 0.7461
+      },
+      "mora_permod": {
+        "ece": 0.1475,
+        "brier": 0.2679,
+        "nll": 0.7449
+      }
+    },
+    "clin_subset": {
+      "uncalibrated": {
+        "ece": 0.1993,
+        "brier": 0.2801,
+        "nll": 0.8121
+      },
+      "static_temp": {
+        "ece": 0.0996,
+        "brier": 0.2475,
+        "nll": 0.6892
+      },
+      "transcal": {
+        "ece": 0.1064,
+        "brier": 0.2487,
+        "nll": 0.6937
+      },
+      "mora_global": {
+        "ece": 0.0958,
+        "brier": 0.2454,
+        "nll": 0.6842
+      },
+      "mora_permod": {
+        "ece": 0.0962,
+        "brier": 0.2458,
+        "nll": 0.6849
+      }
+    }
+  },
+  "H1_winrates": {
+    "img_subset": {
+      "permod_vs_static_ece_win": 0.5,
+      "permod_vs_static_nll_win": 0.45,
+      "permod_vs_transcal_ece_win": 0.6,
+      "permod_vs_global_ece_win": 0.75
+    },
+    "clin_subset": {
+      "permod_vs_static_ece_win": 0.5,
+      "permod_vs_static_nll_win": 0.7,
+      "permod_vs_transcal_ece_win": 0.75,
+      "permod_vs_global_ece_win": 0.5
+    }
+  },
+  "H1_verdict": "NOT SUPPORTED",
+  "note": "per-modality vs global is the H2 ablation for calibration; report both."
+}

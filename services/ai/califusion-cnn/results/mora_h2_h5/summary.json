@@ -1,0 +1,45 @@
+{
+  "n_seeds": 20,
+  "severity": 2.5,
+  "shift_frac": 0.5,
+  "base_auroc_clean": 0.5715,
+  "honest_caveat": "base AUROC ~0.58 caps absolute selective-prediction gains; H2 tests the per-modality-vs-global DELTA, not an absolute risk claim.",
+  "err_rate": {
+    "clean": 0.4545,
+    "img_subset": 0.4759,
+    "clin_subset": 0.4497
+  },
+  "AURC": {
+    "clean": {
+      "conf_only": 0.371,
+      "permod": 0.399,
+      "global": 0.3992,
+      "random": 0.4509
+    },
+    "img_subset": {
+      "conf_only": 0.459,
+      "permod": 0.4231,
+      "global": 0.4216,
+      "random": 0.4852
+    },
+    "clin_subset": {
+      "conf_only": 0.3772,
+      "permod": 0.4304,
+      "global": 0.4229,
+      "random": 0.4507
+    }
+  },
+  "H2": {
+    "aurc_permod": 0.4267,
+    "aurc_global": 0.4223,
+    "aurc_conf_only": 0.4181,
+    "permod_beats_global_winrate": 0.35,
+    "permod_beats_confonly_winrate": 0.375,
+    "verdict": "WEAK/NOT SUPPORTED"
+  },
+  "H5": {
+    "attribution_acc": 0.999,
+    "deferred_shift_recall": 0.998,
+    "verdict": "SUPPORTED"
+  }
+}

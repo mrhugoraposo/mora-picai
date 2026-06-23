@@ -1,0 +1,15 @@
+{
+  "dataset": "NSCLC-Radiomics (Lung1)",
+  "task": "2-year overall survival (binary high-risk)",
+  "n_usable": 420,
+  "n_positive": 251,
+  "n_negative": 169,
+  "prevalence": 0.5976,
+  "operating_threshold_median": 0.6713,
+  "selected_model": "hist_gboost",
+  "auroc_uncal_boot95ci": "0.555 (0.498-0.612)",
+  "delong_uncal_vs_temperature_p": 0.8997,
+  "mcnemar_uncal_vs_temperature_p": 0.0001,
+  "cv": "5x5 repeated stratified, nested calibration",
+  "n_bootstrap": 1000
+}
